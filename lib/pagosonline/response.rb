@@ -22,7 +22,7 @@ module Pagosonline
     end
 
     def state_code
-      params["estado_lap"].to_i
+      params["estado_pol"].to_i
     end
 
     def state
@@ -43,14 +43,27 @@ module Pagosonline
       self.state == :approved
     end
 
+    def failure?
+      [:error, :expired, :declined].include? self.state
+    end
+
     def amount
       self.params["valor"].to_f
     end
 
+    def reference
+      self.params["ref_venta"]
+    end
+
+    def transaccion_id
+      self.params["transaccion_id"]
+    end
+
     def valid?
+      self.test? == self.client.test? &&
       self.signature == Digest::MD5.hexdigest([
         self.client.key,
-        self.client.user_id,
+        self.client.merchant_id,
         self.reference,
         ("%.1f" % self.amount),
         self.currency,

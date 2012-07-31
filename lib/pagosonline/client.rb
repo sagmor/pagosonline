@@ -6,6 +6,7 @@ module Pagosonline
       self.account_id   = options[:account_id]
       self.login        = options[:login]
       self.key          = options[:key]
+      self.test         = !!options[:test]
     end
 
     def payment(options)
@@ -18,6 +19,14 @@ module Pagosonline
       Pagosonline::Response.new(options).tap do |response|
         response.client = self
       end
+    end
+
+    def test?
+      @test
+    end
+
+    def test=(test)
+      @test = test
     end
   end
 end

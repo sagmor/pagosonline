@@ -3,13 +3,13 @@ $:.push File.expand_path("../lib", __FILE__)
 require "pagosonline/version"
 
 Gem::Specification.new do |s|
-  s.name        = "pagos_online"
+  s.name        = "pagosonline"
   s.version     = Pagosonline::VERSION
   s.authors     = ["Sebastian Gamboa"]
   s.email       = ["me@sagmor.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Pagosonline}
+  s.description = %q{Pagosonline}
 
   s.rubyforge_project = "pagosonline"
 

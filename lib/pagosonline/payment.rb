@@ -16,7 +16,6 @@ module Pagosonline
     property :extra
     property :buyer_name
     property :language, :default => "es"
-    property :test, :default => false
 
     def signature
       Digest::MD5.hexdigest([
@@ -26,10 +25,6 @@ module Pagosonline
         self.amount,
         self.currency
       ].join(SIGNATURE_JOIN))
-    end
-
-    def test?
-      !!self.test
     end
 
     def form(options = {})
@@ -56,7 +51,7 @@ module Pagosonline
 
     protected
       def gateway_url
-        self.test? ? TEST_GATEWAY : GATEWAY
+        self.client.test? ? TEST_GATEWAY : GATEWAY
       end
 
       def params
@@ -77,7 +72,7 @@ module Pagosonline
           "nombreComprador"   => self.buyer_name
         }
 
-        if self.test?
+        if self.client.test?
           params["prueba"] = 1
         end
 
