@@ -22,7 +22,7 @@ module Pagosonline
         self.client.key,
         self.client.merchant_id,
         self.reference,
-        self.amount,
+        self.amount.to_i,
         self.currency
       ].join(SIGNATURE_JOIN))
     end
@@ -60,7 +60,7 @@ module Pagosonline
           "cuentaId"          => self.client.account_id,
           "refVenta"          => self.reference,
           "firma"             => self.signature,
-          "valor"             => self.amount,
+          "valor"             => self.amount.to_i,
           "iva"               => nil,
           "baseDevolucionIva" => nil,
           "moneda"            => self.currency,
