@@ -60,7 +60,6 @@ module Pagosonline
     end
 
     def valid?
-      self.test? == self.client.test? &&
       self.signature == Digest::MD5.hexdigest([
         self.client.key,
         self.client.merchant_id,
