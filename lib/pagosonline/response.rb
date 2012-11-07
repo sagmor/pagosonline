@@ -14,7 +14,7 @@ module Pagosonline
     end
 
     def currency
-      params["currency"]
+      params["moneda"]
     end
 
     def signature
@@ -67,7 +67,7 @@ module Pagosonline
         self.reference,
         ("%.1f" % self.amount),
         self.currency,
-        self.params["estado_lap"]
+        self.state_code
       ].join(SIGNATURE_JOIN))
     end
   end
