@@ -15,6 +15,7 @@ module Pagosonline
     property :confirmation_url
     property :extra
     property :buyer_name
+    property :buyer_email
     property :language, :default => "es"
 
     def signature
@@ -69,7 +70,8 @@ module Pagosonline
           "url_respuesta"     => self.response_url,
           "url_confirmacion"  => self.confirmation_url,
 
-          "nombreComprador"   => self.buyer_name
+          "nombreComprador"   => self.buyer_name,
+          "emailComprador"    => self.buyer_email
         }
 
         if self.client.test?
