@@ -30,7 +30,7 @@ module Pagosonline
     end
 
     def form(options = {})
-      id = params[:id] || "pagosonline"
+      id = params[:id] || options[:id] || "pagosonline"
 
       form = <<-EOF
         <form
