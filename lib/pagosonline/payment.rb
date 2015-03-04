@@ -10,6 +10,7 @@ module Pagosonline
     property :reference, :required => true
     property :description, :required => true
     property :amount, :required => true
+    property :taxed, :required => true, :default => true
     property :currency, :required => true, :default => "COP"
     property :response_url
     property :confirmation_url
@@ -62,8 +63,6 @@ module Pagosonline
           "refVenta"          => self.reference,
           "firma"             => self.signature,
           "valor"             => self.amount.to_i,
-          "iva"               => 0,
-          "baseDevolucionIva" => 0,
           "moneda"            => self.currency,
           "descripcion"       => self.description,
           "lng"               => self.language,
@@ -73,6 +72,10 @@ module Pagosonline
           "nombreComprador"   => self.buyer_name,
           "emailComprador"    => self.buyer_email
         }
+        
+        unless self.taxed
+          params["iva"] = params["baseDevolucionIva"] = 0
+        end
 
         if self.client.test?
           params["prueba"] = 1
