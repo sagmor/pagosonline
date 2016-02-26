@@ -1,5 +1,6 @@
 module Pagosonline
   class Response
+    include Shared
     SIGNATURE_JOIN = "~"
 
     attr_accessor :client
@@ -10,11 +11,15 @@ module Pagosonline
     end
 
     def test?
-      params["prueba"] == "1"
+      (
+        params["test"] ||
+          params["prueba"]
+      ) == "1"
     end
 
     def currency
-      params["moneda"]
+      params["currency"] ||
+        params["moneda"]
     end
 
     def signature
@@ -22,7 +27,9 @@ module Pagosonline
     end
 
     def state_code
-      (params["estado"] || params["estado_pol"]).to_i
+      (params["state_pol"] ||
+       params["estado"] ||
+       params["estado_pol"]).to_i
     end
 
     def state
@@ -48,15 +55,20 @@ module Pagosonline
     end
 
     def amount
-      self.params["valor"].to_f
+      (
+        self.params["value"] ||
+          self.params["valor"]
+      ).to_f
     end
 
     def reference
-      self.params["ref_venta"]
+      self.params["reference_sale"] ||
+        self.params["ref_venta"]
     end
 
     def transaccion_id
-      self.params["transaccion_id"]
+      self.params["transaction_id"] ||
+        self.params["transaccion_id"]
     end
 
     def valid?
@@ -64,7 +76,7 @@ module Pagosonline
         self.client.key,
         self.client.merchant_id,
         self.reference,
-        ("%.1f" % self.amount),
+        self.amount_for_signature,
         self.currency,
         self.state_code
       ].join(SIGNATURE_JOIN))

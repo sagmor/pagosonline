@@ -1,5 +1,7 @@
 module Pagosonline
   class Payment < Hashie::Dash
+    include Shared
+
     GATEWAY = "https://gatewaylap.pagosonline.net/ppp-web-gateway/"
     TEST_GATEWAY= "https://stg.gatewaylap.pagosonline.net/ppp-web-gateway/"
     SIGNATURE_JOIN = "~"
@@ -18,13 +20,14 @@ module Pagosonline
     property :buyer_name
     property :buyer_email
     property :language, :default => "es"
+    property :expiration_date
 
     def signature
       Digest::MD5.hexdigest([
         self.client.key,
         self.client.merchant_id,
         self.reference,
-        self.amount.to_i,
+        self.amount_for_signature,
         self.currency
       ].join(SIGNATURE_JOIN))
     end
@@ -58,27 +61,31 @@ module Pagosonline
 
       def params
         params = {
-          "usuarioId"         => self.client.merchant_id,
-          "cuentaId"          => self.client.account_id,
-          "refVenta"          => self.reference,
-          "firma"             => self.signature,
-          "valor"             => self.amount.to_i,
-          "moneda"            => self.currency,
-          "descripcion"       => self.description,
+          "merchantId"        => self.client.merchant_id,
+          "accountId"         => self.client.account_id,
+          "referenceCode"     => self.reference,
+          "signature"             => self.signature,
+          "amount"             => ( "%.2f" % self.amount ),
+          "currency"            => self.currency,
+          "description"       => self.description,
           "lng"               => self.language,
-          "url_respuesta"     => self.response_url,
-          "url_confirmacion"  => self.confirmation_url,
+          "responseUrl"     => self.response_url,
+          "confirmationUrl"  => self.confirmation_url,
 
-          "nombreComprador"   => self.buyer_name,
-          "emailComprador"    => self.buyer_email
+          "payerFullName"   => self.buyer_name,
+          "buyerEmail"    => self.buyer_email
         }
-        
+
         unless self.taxed
-          params["iva"] = params["baseDevolucionIva"] = 0
+          params["tax"] = params["taxReturnBase"] = 0
         end
 
         if self.client.test?
-          params["prueba"] = 1
+          params["test"] = 1
+        end
+
+        if self.expiration_date
+          params["expirationDate"] = self.expiration_date.to_s
         end
 
         if self.extra
