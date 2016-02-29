@@ -1,5 +1,5 @@
 module Pagosonline
-  module Utils
+  module Shared
     def amount_for_signature
       amount = "%.2f" % self.amount
 
