@@ -2,8 +2,8 @@ module Pagosonline
   class Payment < Hashie::Dash
     include Shared
 
-    GATEWAY = "https://gatewaylap.pagosonline.net/ppp-web-gateway/"
-    TEST_GATEWAY= "https://stg.gatewaylap.pagosonline.net/ppp-web-gateway/"
+    GATEWAY = "https://gateway.payulatam.com/ppp-web-gateway"
+    TEST_GATEWAY= "https://stg.gateway.payulatam.com/ppp-web-gateway"
     SIGNATURE_JOIN = "~"
 
     attr_accessor :client
